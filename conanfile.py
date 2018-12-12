@@ -1,13 +1,13 @@
 from conans import ConanFile, CMake, tools
 
-
 class QuazipConan(ConanFile):
     name = "quazip"
     version = "0.7.6"
     license = "LGPL-2.1, zlib/png"
-    url = "<Package recipe repository url here, for issues about the package>"
+    url = "https://github.com/altairwei/conan-quazip"
     description = "A Qt/C++ wrapper for Gilles Vollant's ZIP/UNZIP C package (minizip). Provides access to ZIP archives from Qt programs using QIODevice API."
     settings = "os", "compiler", "build_type", "arch"
+    requires = "zlib/1.2.11@conan/stable"
     options = {"shared": [True, False]}
     default_options = "shared=True"
     generators = "cmake"
