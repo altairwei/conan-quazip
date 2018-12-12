@@ -9,12 +9,12 @@ class QuazipConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     requires = "zlib/1.2.11@conan/stable"
     options = {"shared": [True, False]}
-    default_options = "shared=True"
+    default_options = "shared=False"
     generators = "cmake"
 
     def source(self):
-        self.run("git clone https://github.com/stachenov/quazip.git")
-        self.run("cd quazip && git checkout 0.7.6")
+        git = tools.Git(folder="quazip")
+        git.clone("https://github.com/stachenov/quazip.git", "0.7.6")
         # This small hack might be useful to guarantee proper /MT /MD linkage
         # in MSVC if the packaged project doesn't have variables to set it
         # properly
@@ -25,9 +25,12 @@ conan_basic_setup()''')
 
     def build(self):
         cmake = CMake(self)
-        shared = "-DBUILD_SHARED_LIBS=ON" if self.options.shared else ""
-        self.run('cmake quazip %s %s' % (cmake.command_line, shared))
-        self.run("cmake --build . %s" % cmake.build_config)
+        #shared = "-DBUILD_SHARED_LIBS=ON" if self.options.shared else ""
+        shared = {"BUILD_SHARED_LIBS" : "ON"} if self.options.shared else {"BUILD_SHARED_LIBS" : "OFF"}
+        cmake.configure(source_folder="quazip", defs=shared)
+        cmake.build()
+        #self.run('cmake quazip %s %s' % (cmake.command_line, shared))
+        #self.run("cmake --build . %s" % cmake.build_config)
 
     def package(self):
         self.copy(src="quazip/quazip", pattern="*.h", dst="include/quazip")
