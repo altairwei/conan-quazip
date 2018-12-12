@@ -3,6 +3,6 @@
 
 int main() {
     QuaZip zip;
-    std::cout << zip.isOpen();
+    std::cout << "QuaZIP is opened: " << zip.isOpen();
     return 0;
 }

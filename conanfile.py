@@ -34,8 +34,9 @@ conan_basic_setup()''')
         self.copy(pattern="*quazip.lib", dst="lib", keep_path=False)
         self.copy(pattern="*.dll", dst="bin", keep_path=False)
         self.copy(pattern="*.so*", dst="lib", keep_path=False)
+        self.copy(pattern="*.dylib*", dst="lib", keep_path=False)
         self.copy(pattern="*.a", dst="lib", keep_path=False)
 
     def package_info(self):
-        self.cpp_info.libs = ["quazip5d"] if (self.settings.os == "Windows" and self.settings.build_type == "Debug") else ["quazip5"]
+        self.cpp_info.libs = ["quazip5d"] if self.settings.build_type == "Debug" else ["quazip5"]
 
