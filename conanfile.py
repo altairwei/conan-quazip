@@ -14,7 +14,7 @@ class QuazipConan(ConanFile):
 
     def source(self):
         git = tools.Git(folder="quazip")
-        git.clone("https://github.com/stachenov/quazip.git", "0.7.6")
+        git.clone("https://github.com/stachenov/quazip.git", self.version)
         # This small hack might be useful to guarantee proper /MT /MD linkage
         # in MSVC if the packaged project doesn't have variables to set it
         # properly
@@ -25,20 +25,24 @@ conan_basic_setup()''')
 
     def build(self):
         cmake = CMake(self)
-        #shared = "-DBUILD_SHARED_LIBS=ON" if self.options.shared else ""
-        shared = {"BUILD_SHARED_LIBS" : "ON"} if self.options.shared else {"BUILD_SHARED_LIBS" : "OFF"}
-        cmake.configure(source_folder="quazip", defs=shared)
+        cmake.configure(source_folder="quazip")
         cmake.build()
-        #self.run('cmake quazip %s %s' % (cmake.command_line, shared))
-        #self.run("cmake --build . %s" % cmake.build_config)
+
+    def build_id(self):
+        self.info_build.options.shared = "shared_and_static"
 
     def package(self):
-        self.copy(src="quazip/quazip", pattern="*.h", dst="include/quazip")
-        self.copy(pattern="*quazip.lib", dst="lib", keep_path=False)
-        self.copy(pattern="*.dll", dst="bin", keep_path=False)
-        self.copy(pattern="*.so*", dst="lib", keep_path=False)
-        self.copy(pattern="*.dylib*", dst="lib", keep_path=False)
-        self.copy(pattern="*.a", dst="lib", keep_path=False)
+        self.copy(pattern="COPYING", dst="licenses", src="quazip")
+        self.copy(pattern="*.h", dst="include/quazip", src="quazip/quazip")
+        # QuaZIP explicitly specified STATIC and SHARED in add_library(), so 
+        # BUILD_SHARED_LIBS and BUILD_STATIC_LIBS do not works.
+        if self.options.shared:
+            self.copy(pattern="*.dll", dst="bin", keep_path=False)
+            self.copy(pattern="*.so*", dst="lib", keep_path=False)
+            self.copy(pattern="*.dylib*", dst="lib", keep_path=False)
+        else:
+            self.copy(pattern="*quazip.lib", dst="lib", keep_path=False)
+            self.copy(pattern="*.a", dst="lib", keep_path=False)
 
     def package_info(self):
         self.cpp_info.libs = ["quazip5d"] if self.settings.build_type == "Debug" else ["quazip5"]
