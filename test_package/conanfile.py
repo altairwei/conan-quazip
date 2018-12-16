@@ -3,8 +3,8 @@ from conans import ConanFile, CMake, tools, RunEnvironment
 
 class QuazipTestConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
-    #generators = "cmake_find_package"
-    generators = "cmake"
+    generators = "cmake_find_package"
+    #generators = "cmake"
     requires = "quazip/0.7.6@altair/testing"
 
     def build(self):
@@ -22,4 +22,4 @@ class QuazipTestConan(ConanFile):
     def test(self):
         if not tools.cross_building(self.settings):
             os.chdir("bin")
-            self.run(".%sexample" % os.sep)
+            self.run(".%sexample" % os.sep, run_environment=True)
