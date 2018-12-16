@@ -12,7 +12,6 @@ file(GLOB PUBLIC_HEADERS "*.h")
 add_definitions(-DQUAZIP_BUILD)
 if(QUAZIP_STATIC)
 	add_definitions(-DQUAZIP_STATIC)
-	add_definitions(-DQUAZIP_EXPORT)
 endif()
 
 qt_wrap_cpp(MOC_SRCS ${PUBLIC_HEADERS})

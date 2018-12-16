@@ -6,6 +6,7 @@ class QuazipConan(ConanFile):
     version = "0.7.6"
     license = "LGPL-2.1, zlib/png"
     url = "https://github.com/altairwei/conan-quazip"
+    homepage = "https://github.com/stachenov/quazip"
     description = "A Qt/C++ wrapper for Gilles Vollant's ZIP/UNZIP C package (minizip). Provides access to ZIP archives from Qt programs using QIODevice API."
     settings = "os", "compiler", "build_type", "arch"
     requires = "zlib/1.2.11@conan/stable"
@@ -13,7 +14,7 @@ class QuazipConan(ConanFile):
         "shared": [True, False]
     }
     default_options = {
-        "shared": False,
+        "shared": True,
         "zlib:shared": False
     }
     exports_sources = ["CMakeLists.txt", "CMakeLists-2.txt"]
@@ -29,7 +30,7 @@ class QuazipConan(ConanFile):
                   os.path.join(self._source_subfolder, "CMakeListsOriginal.txt"))
         shutil.copy("CMakeLists.txt",
                     os.path.join(self._source_subfolder, "CMakeLists.txt"))
-        # second level CMakeLists.txt
+        # second-level CMakeLists.txt
         os.rename(os.path.join(self._source_subfolder, "quazip", "CMakeLists.txt"),
                   os.path.join(self._source_subfolder, "quazip","CMakeListsOriginal.txt"))
         shutil.copy("CMakeLists-2.txt",
@@ -44,31 +45,18 @@ class QuazipConan(ConanFile):
         cmake.configure(source_folder=self._source_subfolder)
         cmake.build()
 
-    #def build_id(self):
-        #self.info_build.options.shared = "shared_and_static"
-
     def package(self):
         self.copy(pattern="COPYING", dst="licenses", src=self._source_subfolder)
         self.copy(pattern="*.h", dst="include/quazip", 
             src=os.path.join(self._source_subfolder, "quazip"))
         if self.options.shared:
-            self.copy(pattern="*.dll", dst="bin", keep_path=False)
-            self.copy(pattern="*.lib", dst="bin", keep_path=False)
+            self.copy(pattern="*.dll", dst="lib", keep_path=False)
+            self.copy(pattern="*.lib", dst="lib", keep_path=False)
             self.copy(pattern="*.so*", dst="lib", keep_path=False)
             self.copy(pattern="*.dylib*", dst="lib", keep_path=False)
-        #     self.copy(pattern="*.dll", dst="bin", keep_path=False)
-        #     self.copy(pattern="*quazip5*.lib", dst="bin", keep_path=False)
-        #     self.copy(pattern="*quazip5*.exp", dst="bin", keep_path=False)
-        #     self.copy(pattern="*.so*", dst="lib", keep_path=False)
-        #     self.copy(pattern="*.dylib*", dst="lib", keep_path=False)
         else:
             self.copy(pattern="*.lib", dst="lib", keep_path=False)
             self.copy(pattern="*.a", dst="lib", keep_path=False)
-        #     self.copy(pattern="*quazip5.exp", dst="lib", keep_path=False)
-        #     self.copy(pattern="*quazip_static*.lib", dst="lib", keep_path=False)
-        #     self.copy(pattern="*.a", dst="lib", keep_path=False)
 
     def package_info(self):
-        if self.options.shared:
-            self.cpp_info.libdirs.append("bin")
         self.cpp_info.libs = tools.collect_libs(self)
