@@ -1,12 +1,11 @@
 import os
-from conans import ConanFile, CMake, tools
+from conans import ConanFile, CMake, tools, RunEnvironment
 
 class QuazipTestConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
+    #generators = "cmake_find_package"
     generators = "cmake"
-    default_options = {
-        "quazip:shared": False
-    }
+    requires = "quazip/0.7.6@altair/testing"
 
     def build(self):
         cmake = CMake(self)

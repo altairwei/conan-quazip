@@ -31,6 +31,8 @@ class QuazipConan(ConanFile):
 
     def build(self):
         cmake = CMake(self)
+        if self.settings.os == "Windows":
+            cmake.definitions["CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS"] = 1
         cmake.configure(source_folder=self._source_subfolder)
         cmake.build()
 
@@ -43,12 +45,21 @@ class QuazipConan(ConanFile):
             src=os.path.join(self._source_subfolder, "quazip"))
         if self.options.shared:
             self.copy(pattern="*.dll", dst="bin", keep_path=False)
+            self.copy(pattern="*quazip5.lib", dst="bin", keep_path=False)
+            self.copy(pattern="*quazip5.exp", dst="bin", keep_path=False)
             self.copy(pattern="*.so*", dst="lib", keep_path=False)
             self.copy(pattern="*.dylib*", dst="lib", keep_path=False)
         else:
-            self.copy(pattern="*quazip5.lib", dst="lib", keep_path=False)
+            self.copy(pattern="*quazip_static.lib", dst="lib", keep_path=False)
             self.copy(pattern="*.a", dst="lib", keep_path=False)
 
     def package_info(self):
-        #self.cpp_info.libs = ["quazip5d"] if self.settings.build_type == "Debug" else ["quazip5"]
+        if self.options.shared:
+            self.cpp_info.libdirs.append("bin")
         self.cpp_info.libs = tools.collect_libs(self)
+        # if self.settings.build_type == "Debug":
+        #     self.cpp_info.libs.append("quazip5d")
+        # else:
+        #     self.cpp_info.libs.append("quazip5")
+        #     if not self.options.shared:
+        #         self.cpp_info.libs.append("quazip_static")
