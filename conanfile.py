@@ -39,7 +39,6 @@ class QuazipConan(ConanFile):
     def build(self):
         cmake = CMake(self)
         cmake.definitions["BUILD_SHARED_LIBS"] = self.options.shared
-        cmake.definitions["QUAZIP_STATIC"] = not self.options.shared
         if self.settings.os == "Windows":
             cmake.definitions["CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS"] = self.options.shared
         cmake.configure(source_folder=self._source_subfolder)

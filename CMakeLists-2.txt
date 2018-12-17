@@ -10,9 +10,6 @@ file(GLOB PUBLIC_HEADERS "*.h")
 
 # Must be added to enable export macro
 add_definitions(-DQUAZIP_BUILD)
-if(QUAZIP_STATIC)
-	add_definitions(-DQUAZIP_STATIC)
-endif()
 
 qt_wrap_cpp(MOC_SRCS ${PUBLIC_HEADERS})
 set(SRCS ${SRCS} ${MOC_SRCS})
