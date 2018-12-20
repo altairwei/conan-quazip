@@ -1,6 +1,9 @@
 project(PackageTest CXX)
 cmake_minimum_required(VERSION 2.8.12)
 
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_output_dirs_setup()
+
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -24,10 +27,6 @@ if(APPLE)
 else()
     set(CMAKE_INSTALL_RPATH "$ORIGIN")
 endif()
-
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/bin)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin)
 
 include_directories(example ${Qt5Core_INCLUDE_DIRS} ${quazip_INCLUDE_DIRS} ${zlib_INCLUDE_DIRS})
 add_executable(example example.cpp)

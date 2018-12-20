@@ -3,9 +3,7 @@ from conans import ConanFile, CMake, tools, RunEnvironment
 
 class QuazipTestConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
-    generators = "cmake_find_package"
-    #generators = "cmake"
-    requires = "quazip/0.7.6@altair/testing"
+    generators = "cmake", "cmake_find_package"
 
     def build(self):
         cmake = CMake(self)
