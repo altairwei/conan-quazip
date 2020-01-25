@@ -9,7 +9,7 @@ class QuazipConan(ConanFile):
     homepage = "https://github.com/stachenov/quazip"
     description = "A Qt/C++ wrapper for Gilles Vollant's ZIP/UNZIP C package (minizip). Provides access to ZIP archives from Qt programs using QIODevice API."
     settings = "os", "compiler", "build_type", "arch"
-    requires = "zlib/1.2.11@conan/stable"
+    requires = ("zlib/1.2.11@conan/stable", "qt/5.12.6@bincrafters/stable")
     options = {
         "shared": [True, False]
     }
