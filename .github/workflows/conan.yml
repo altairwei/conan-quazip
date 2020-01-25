@@ -12,8 +12,6 @@ jobs:
       fail-fast: false
       matrix:
         compiler:
-        - { name: "GCC", version: "4.9", buildType: "Debug"     }
-        - { name: "GCC", version: "4.9", buildType: "Release"   }
         - { name: "GCC", version: "5", buildType: "Debug"       }
         - { name: "GCC", version: "5", buildType: "Release"     }
         - { name: "GCC", version: "6", buildType: "Debug"       }
@@ -34,10 +32,6 @@ jobs:
         - { name: "CLANG", version: "6.0", buildType: "Release" }
         - { name: "CLANG", version: "7.0", buildType: "Debug"   }
         - { name: "CLANG", version: "7.0", buildType: "Release" }
-        - { name: "CLANG", version: "8", buildType: "Debug"     }
-        - { name: "CLANG", version: "8", buildType: "Release"   }
-        - { name: "CLANG", version: "9", buildType: "Debug"     }
-        - { name: "CLANG", version: "9", buildType: "Release"   }
     name: ${{ matrix.compiler.name }} ${{ matrix.compiler.version }} ${{ matrix.compiler.buildType }}
     # if: ${{ env.SPLIT_BY_BUILD_TYPE }} == 'true'
     steps:
@@ -52,9 +46,12 @@ jobs:
       - name: Run
         env:
           CONAN_USE_DOCKER: 1
+          CONAN_USERNAME: ${{ secrets.CONAN_LOGIN_USERNAME }}
           CONAN_LOGIN_USERNAME: ${{ secrets.CONAN_LOGIN_USERNAME }}
           CONAN_PASSWORD: ${{ secrets.CONAN_PASSWORD }}
+          CONAN_UPLOAD: ${{ secrets.CONAN_UPLOAD }}
           CONAN_BUILD_TYPES: ${{ matrix.compiler.buildType }}
+          CONAN_UPLOAD_ONLY_WHEN_STABLE: 0
         run: |
           export CONAN_${{ matrix.compiler.name }}_VERSIONS="${{ matrix.compiler.version }}"
           python build.py
