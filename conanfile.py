@@ -9,17 +9,23 @@ class QuazipConan(ConanFile):
     homepage = "https://github.com/stachenov/quazip"
     description = "A Qt/C++ wrapper for Gilles Vollant's ZIP/UNZIP C package (minizip). Provides access to ZIP archives from Qt programs using QIODevice API."
     settings = "os", "compiler", "build_type", "arch"
-    requires = ("zlib/1.2.11@conan/stable", "qt/5.12.6@bincrafters/stable")
+    requires = "zlib/1.2.11@conan/stable"
     options = {
-        "shared": [True, False]
+        "shared": [True, False],
+        "qtdir": "ANY"
     }
     default_options = {
+        "qtdir": None,
         "shared": True,
         "zlib:shared": False
     }
     exports_sources = ["CMakeLists.txt", "CMakeLists-2.txt"]
     generators = "cmake_find_package"
     _source_subfolder = "source_subfolder"
+
+    def requirements(self):
+        if not self.options.qtdir:
+            self.requires("qt/5.12.6@bincrafters/stable")
 
     def source(self):
         url = 'https://github.com/stachenov/quazip/archive/%s.tar.gz' % self.version
@@ -38,6 +44,8 @@ class QuazipConan(ConanFile):
 
     def build(self):
         cmake = CMake(self)
+        if self.options.qtdir:
+            cmake.definitions["CMAKE_PREFIX_PATH"] = self.options.qtdir
         cmake.definitions["BUILD_SHARED_LIBS"] = self.options.shared
         if self.settings.os == "Windows":
             cmake.definitions["CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS"] = self.options.shared
