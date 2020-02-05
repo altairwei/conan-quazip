@@ -10,6 +10,7 @@ class QuazipConan(ConanFile):
     description = "A Qt/C++ wrapper for Gilles Vollant's ZIP/UNZIP C package (minizip). Provides access to ZIP archives from Qt programs using QIODevice API."
     settings = "os", "compiler", "build_type", "arch"
     requires = "zlib/1.2.11@conan/stable"
+    build_requires = "cmake_installer/3.12.4@conan/stable"
     options = {
         "shared": [True, False],
         "qtdir": "ANY"
