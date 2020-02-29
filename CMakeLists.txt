@@ -6,6 +6,8 @@ project(QuaZip)
 # and producing a warning when unset since 3.7.1)
 cmake_policy(SET CMP0042 NEW)
 
+set(CMAKE_OSX_DEPLOYMENT_TARGET 10.11)
+
 find_package(Qt5Core QUIET)
 set(CMAKE_CXX_STANDARD 11)
 set(QTCORE_LIBRARIES ${Qt5Core_LIBRARIES})
