@@ -28,6 +28,10 @@ class QuazipConan(ConanFile):
         if not self.options.qtdir:
             self.requires("qt/5.12.6@bincrafters/stable")
 
+    def build_requirements(self):
+        if tools.os_info.is_windows and self.settings.compiler == "Visual Studio":
+            self.build_requires("jom/1.1.3")
+
     def source(self):
         url = 'https://github.com/stachenov/quazip/archive/%s.tar.gz' % self.version
         tools.get(url)
